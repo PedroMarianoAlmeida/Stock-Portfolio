@@ -24,6 +24,7 @@ class Portfolio extends React.Component {
         // Note: api JSON data often come in underscore_styled like above
         this.removeStock = this.removeStock.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.addStock = this.addStock.bind(this);
       }
 
       removeStock(index) {
@@ -37,6 +38,23 @@ class Portfolio extends React.Component {
         const { name, value } = event.target;
         portfolio[index][name] = value;
         this.setState({ portfolio });
+      }
+
+      addStock(event){
+        event.preventDefault();
+        const portfolio = this.state.portfolio.slice();
+        portfolio.push({
+          name: event.target.childNodes[0].value,
+          shares_owned: event.target.childNodes[1].value,
+          cost_per_share: event.target.childNodes[2].value,
+          market_price: event.target.childNodes[3].value
+        });
+        this.setState({ portfolio });
+
+        event.target.childNodes[0].value = '';
+        event.target.childNodes[1].value = '';
+        event.target.childNodes[2].value = '';
+        event.target.childNodes[3].value = '';
       }
       
       render() {
@@ -96,11 +114,20 @@ class Portfolio extends React.Component {
                 </table>
               </div>
               <div className="col-12 col-md-6">
-          <h4 className="mb-3">Portfolio value: $ {portfolio_market_value}</h4>
-        </div>
-        <div className="col-12 col-md-6">
-          <h4 className="mb-3">Portfolio gain/loss: $ {portfolio_gain_loss}</h4>
-        </div>
+                <h4 className="mb-3">Portfolio value: $ {portfolio_market_value}</h4>
+              </div>
+              <div className="col-12 col-md-6">
+                <h4 className="mb-3">Portfolio gain/loss: $ {portfolio_gain_loss}</h4>
+              </div>
+              <div className="col-12">
+                <form onSubmit={e => this.addStock(e)}>
+                  <input className="mx-2" type="text" placeholder="new Stock" name="new_stock" required/>
+                  <input className="mx-2" type="number" placeholder="Share Owned" name="shares-owned" required/>
+                  <input className="mx-2" type="number" placeholder="Cost per Share" name="cost_per_share" required/>
+                  <input className="mx-2" type="number" placeholder="Marked Price" name="market-price" required/>
+                  <button className="mx-2">Add</button>
+                </form>
+              </div>
             </div>
           </div>
         );
